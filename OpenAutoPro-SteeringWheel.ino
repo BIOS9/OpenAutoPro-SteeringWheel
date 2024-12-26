@@ -37,6 +37,7 @@ Command getCommand() {
   for(int i=NONE; i<=PREV; i++) {
     if (bVal >= commandValues[i] - commandTolerance && bVal <= commandValues[i] + commandTolerance) {
       bCommand = (Command)i;
+      break;
     }
   }
 
@@ -47,6 +48,7 @@ Command getCommand() {
   if (aCommand == NONE) {
     return bCommand;
   }
+  return aCommand;
 }
 
 void setup() {
@@ -58,6 +60,13 @@ void loop() {
   Command c = getCommand();
   if (lastCommand != c) {
     lastKeyPress = millis();
+  }
+
+  if (c == SHUTDOWN) {
+    DigiKeyboard.sendKeyStroke(KEY_T, MOD_CONTROL_LEFT | MOD_ALT_LEFT);
+    DigiKeyboard.delay(700);
+    DigiKeyboard.println("shutdown now");
+    DigiKeyboard.delay(1000);
   }
 
  if (lastCommand == NONE) {
@@ -75,11 +84,6 @@ void loop() {
         modeIndex = 0;
       }
       DigiKeyboard.sendKeyStroke(modeKeys[modeIndex]);
-    } else if (c == SHUTDOWN) {
-      DigiKeyboard.sendKeyStroke(KEY_T, MOD_CONTROL_LEFT | MOD_ALT_LEFT);
-      DigiKeyboard.delay(300);
-      DigiKeyboard.println("shutdown now");
-
     }
   } else if (millis() - lastKeyPress > 800) {
     if (c == VOL_UP) {
